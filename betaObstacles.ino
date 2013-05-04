@@ -8,6 +8,7 @@ const int HIGH_SPEED_B = 220;
 const int TURN_SPEED = 180;
 boolean firstRun = true;
 const int minDistance = 30;
+char incomingByte = '0';
 PING ping;
 
 void setup(){
@@ -22,20 +23,23 @@ void setup(){
 void loop(){
  
   if(firstRun){
-    delay(5000);
+    stop();
     firstRun = false;
     long distance = ping.getDistance(); // Dummy first call in order to receive actual value the second time
   }
-  else{
-       if(!foundObstacle()){
-           moveForward();
-           delay(400);
-       }
-      else{
-           avoidObstacle();
-           Serial.println("avoid");
-      }
+  
+  if(Serial.available() > 0){
+    incomingByte = Serial.read();
   }
+  
+  if(incomingByte == '0'){
+    stop();
+  }
+  
+  if(incomingByte == '1'){
+      beAutonomous();
+  }
+  
  
  }
   
@@ -85,5 +89,14 @@ void stop(){
     boolean answer =  distance <= minDistance;
     Serial.println(distance);
     return answer;
+  }
+  
+  void beAutonomous(){
+     if(!foundObstacle()){
+           moveForward();
+           delay(400);
+           return;
+       }
+      avoidObstacle();
   }
 
