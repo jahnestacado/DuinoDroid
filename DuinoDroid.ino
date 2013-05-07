@@ -6,6 +6,7 @@ const int backB = 10;
 const int HIGH_SPEED_A = 225;
 const int HIGH_SPEED_B = 220;
 const int TURN_SPEED = 180;
+const int LED = 13;
 boolean firstRun = true;
 const int minDistance = 30;
 char incomingByte = '0';
@@ -17,6 +18,8 @@ void setup(){
    pinMode(forwardB, OUTPUT);
    pinMode(backA, OUTPUT);
    pinMode(backB, OUTPUT);
+   pinMode(LED, OUTPUT);
+   digitalWrite(LED, LOW);
   
 }
 
@@ -45,13 +48,13 @@ void loop(){
   
 void avoidObstacle(){
    goBack();
-   delay(1500);
+   toggleLEDPattern(333, 4);
    stop();
-   delay(500);
+   toggleLEDPattern(333, 2);
    turnLeft();
-   delay(700);
+   toggleLEDPattern(700, 1);
    stop();
-   delay(300);
+   toggleLEDPattern(50, 6);
 }
   
 void moveForward(){
@@ -82,9 +85,28 @@ void stop(){
    digitalWrite(backA, LOW);
    digitalWrite(backB, LOW);
 } 
+
+void toggleLEDPattern(int duration, int times){
+  for(int i = 0; i <= times -1 ; i++){
+    toggleLED();
+    delay(duration);
+  }
+}
+
+void toggleLED() {
+  int ledState = getLedState();
+   if (ledState == HIGH) 
+     ledState = LOW;
+   else 
+     ledState = HIGH;
+   digitalWrite(LED,ledState);  // make LED ON/OFF same as updated ledState
+}
+
+int getLedState(){
+ return digitalRead(LED); 
+}
   
-  
-  boolean foundObstacle(){
+  boolean hasFoundObstacle(){
     long distance = ping.getDistance();
     boolean answer =  distance <= minDistance;
     Serial.println(distance);
@@ -92,7 +114,7 @@ void stop(){
   }
   
   void beAutonomous(){
-     if(!foundObstacle()){
+     if(!hasFoundObstacle()){
            moveForward();
            delay(400);
            return;
