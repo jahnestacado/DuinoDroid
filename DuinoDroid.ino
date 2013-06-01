@@ -5,10 +5,10 @@ const int forwardB = 9;
 const int backB = 10;
 const int HIGH_SPEED_A = 225;
 const int HIGH_SPEED_B = 220;
-const int TURN_SPEED = 180;
+const int TURN_SPEED = 200;
 const int LED = 13;
 boolean firstRun = true;
-const int minDistance = 30;
+const int minDistance = 35;
 char incomingByte = '0';
 PING ping;
 
@@ -48,13 +48,22 @@ void loop(){
   
 void avoidObstacle(){
    goBack();
-   toggleLEDPattern(333, 4);
+   toggleLEDPattern(130, 2);
    stop();
-   toggleLEDPattern(333, 2);
-   turnLeft();
-   toggleLEDPattern(700, 1);
+   toggleLEDPattern(90, 2);
+   randomMove();
+   toggleLEDPattern(370, 1);
    stop();
-   toggleLEDPattern(50, 6);
+   toggleLEDPattern(50, 7);
+}
+
+void randomMove(){
+  int randNum = random(0, 200);
+  if(randNum <= 100){
+     turnLeft();
+     return;
+  }
+  turnRight();
 }
   
 void moveForward(){
@@ -79,6 +88,13 @@ void turnLeft(){
    digitalWrite(backB, LOW);
 }  
 
+void turnRight(){
+   digitalWrite(forwardA, TURN_SPEED);
+   analogWrite(forwardB, LOW);
+   analogWrite(backA, LOW);
+   digitalWrite(backB, TURN_SPEED);
+} 
+
 void stop(){
    digitalWrite(forwardA, LOW);
    digitalWrite(forwardB, LOW);
@@ -94,7 +110,7 @@ void toggleLEDPattern(int duration, int times){
 }
 
 void toggleLED() {
-  int ledState = getLedState();
+  int ledState = digitalRead(LED); 
    if (ledState == HIGH) 
      ledState = LOW;
    else 
@@ -102,12 +118,11 @@ void toggleLED() {
    digitalWrite(LED,ledState);  // make LED ON/OFF same as updated ledState
 }
 
-int getLedState(){
- return digitalRead(LED); 
-}
+
   
   boolean hasFoundObstacle(){
     long distance = ping.getDistance();
+    Serial.println(distance);
     boolean answer =  distance <= minDistance;
     Serial.println(distance);
     return answer;
