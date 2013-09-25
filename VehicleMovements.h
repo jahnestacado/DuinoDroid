@@ -1,16 +1,16 @@
-#ifndef Autonomous_H
-#define Autonomous_H
+#ifndef VehicleMovements_H
+#define VehicleMovements_H
  
 
 #include<Arduino.h>//It is very important to remember this! note that if you are using Arduino 1.0 IDE, change "WProgram.h" to "Arduino.h"
- 
-class Autonomous {
+#include <Servo.h> 
+class VehicleMovements {
 public:
-        Autonomous();
-        ~ Autonomous();
+        VehicleMovements();
+        ~ VehicleMovements();
   
         void avoidObstacle();
-        void randomMove();
+        void moveToOptimalDirection();
         void moveForward();
         void goBack();
         void turnLeft();
@@ -22,6 +22,11 @@ public:
         void beAutonomous();
         void initSensor();
         void goFront();
+        void moveFrontLeft();
+        void moveFrontRight();
+        void moveBackLeft();
+        void moveBackRight();
+      
       
 };
 

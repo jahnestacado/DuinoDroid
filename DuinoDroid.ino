@@ -1,15 +1,15 @@
-#include "Autonomous.h"
-
+#include "VehicleMovements.h"
+#include <Servo.h> 
 
 char incomingByte = '0';
-Autonomous autonomous;
+VehicleMovements movements;
 boolean isAuto = false;
 
 
 void setup(){
-   Serial.begin(9600);
- 
-  
+   Serial.begin(9600); 
+   movements.initSensor();
+
 }
 
 void loop(){
@@ -34,10 +34,10 @@ void loop(){
   
 
   if(isAuto){
-    autonomous.beAutonomous();
+    movements.beAutonomous();
   }
   else if(incomingByte == 'E'){
-    autonomous.stop();
+    movements.stop();
   }
   else interpretCommand(incomingByte);
   
@@ -48,12 +48,30 @@ void loop(){
  
  void interpretCommand(char command){
    switch(command){
-     case '0':  autonomous.stop();
+     case '0':  movements.stop();
      break;
-     case 'F': autonomous.moveForward();
+     case 'F': movements.moveForward();
      delay(100);
      break;
-     case 'B': autonomous.goBack();
+     case 'B': movements.goBack();
+     delay(100);
+     break;
+      case 'L': movements.turnLeft();
+     delay(100);
+     break;
+      case 'R': movements.turnRight();
+     delay(100);
+     break;
+     case '7': movements.moveFrontLeft();
+     delay(100);
+     break;
+     case '9': movements.moveFrontRight();
+     delay(100);
+     break;
+      case '3': movements.moveBackLeft();
+     delay(100);
+     break;
+      case '4': movements.moveBackRight();
      delay(100);
      break;
      
