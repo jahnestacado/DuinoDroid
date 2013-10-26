@@ -1,4 +1,4 @@
 DuinoDroid
 ==========
 
-Autonomous - Android remote controlled vehicle controlled by an Arduino microcontroller
+Autonomous/Android remote controlled Arduino vehicle
